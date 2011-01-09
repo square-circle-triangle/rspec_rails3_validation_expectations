@@ -1,1 +1,1 @@
-require 'rspec_validation_expectations'
+require 'rspec_rails3_validation_expectations'
