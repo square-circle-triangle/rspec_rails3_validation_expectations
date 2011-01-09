@@ -2,7 +2,7 @@ require 'rake'
 
 Gem::Specification.new do |s|
   s.name     = "rspec_rails3_validation_expectations"
-  s.version  = "0.1"
+  s.version  = "0.0.1"
   s.date     = "2011-01-10"
   s.summary  = "Adds expectations for testing ActiveRecord model validations."
   s.email    = "jitendra.vinsol@gmail.com"
