@@ -6,7 +6,7 @@ module ValidationExpectations
   BasicValidations.each do |method|
     define_method("it_should_validate_#{method}_of") do |*one_or_more_fields|
       options = one_or_more_fields.last.is_a?(Hash) ? one_or_more_fields.pop : {}
-      model_name = described_type
+      model_name = described_class
       one_or_more_fields.each do |field|
         it "should validate #{method} of #{field.to_s.humanize.downcase}" do
           validations = model_name.reflect_on_all_validations
@@ -21,7 +21,7 @@ module ValidationExpectations
   InListValidations.each do |method|
     define_method("it_should_validate_#{method}_of") do |*one_or_more_fields|
       options = one_or_more_fields.last.is_a?(Hash) ? one_or_more_fields.pop : {}
-      model_name = described_type
+      model_name = described_class
       one_or_more_fields.each do |field|
         it "should validate #{method} of #{field.to_s.humanize.downcase} as one of #{options[:in].to_sentence(:words_connector => 'or', :last_word_connector => true)}" do
           validations = model_name.reflect_on_all_validations
@@ -37,7 +37,7 @@ end
 include ValidationExpectations
 
 def it_should_be_createable *args
-  model_name = described_type
+  model_name = described_class
   attributes = args.last.is_a?(Hash) ? args.last[:with] : {}
 
   it "should be creatable" do
