@@ -9,10 +9,16 @@ module ValidationExpectations
       model_name = described_class
       one_or_more_fields.each do |field|
         it "should validate #{method} of #{field.to_s.humanize.downcase}" do
-          validations = model_name.reflect_on_all_validations
-          validations = validations.select { |e| e.macro == "validates_#{method}_of".to_sym }
-          validations.collect(&:name).should include(field)
-          validations.collect(&:options).should include(options)
+          validators = model_name.validators
+          
+          if method == :uniqueness
+            validator = validators.detect { |e| e.class.to_s == "ActiveRecord::Validations::UniquenessValidator" && e.attributes.include?(field) }
+          else
+            validator = validators.detect { |e| e.class.to_s == "ActiveModel::Validations::#{method.to_s.titleize}Validator" && e.attributes.include?(field) }
+          end
+          
+          validator.should_not be_nil
+          validator.options.should include(options)
         end
       end
     end
@@ -24,9 +30,10 @@ module ValidationExpectations
       model_name = described_class
       one_or_more_fields.each do |field|
         it "should validate #{method} of #{field.to_s.humanize.downcase} as one of #{options[:in].to_sentence(:words_connector => 'or', :last_word_connector => true)}" do
-          validations = model_name.reflect_on_all_validations
-          validation = validations.detect { |v| v.macro == "validates_#{method}_of".to_sym && v.name == field }
-          validation.options[:in].sort.should == options[:in].sort unless validation.nil?
+          validators = model_name.validators
+          validator = validators.detect { |v| v.class.to_s == "ActiveModel::Validations::#{method.to_s.titleize}Validator" && v.name == field }
+          validator.should_not be_nil
+          validator.options[:in].sort.should == options[:in].sort unless validator.nil?
         end
       end
     end
