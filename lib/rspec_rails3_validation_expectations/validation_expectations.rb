@@ -29,7 +29,7 @@ module ValidationExpectations
       options = one_or_more_fields.last.is_a?(Hash) ? one_or_more_fields.pop : {}
       model_name = described_class
       one_or_more_fields.each do |field|
-        it "should validate #{method} of #{field.to_s.humanize.downcase} as one of #{options[:in].to_sentence(:words_connector => 'or', :last_word_connector => true)}" do
+        it "should validate #{method} of #{field.to_s.humanize.downcase} as one of #{options[:in].to_sentence(:last_word_connector => ' or ')}" do
           validators = model_name.validators
           validator = validators.detect { |v| v.class.to_s == "ActiveModel::Validations::#{method.to_s.titleize}Validator" && v.attributes.include?(field) }
           validator.should_not be_nil
