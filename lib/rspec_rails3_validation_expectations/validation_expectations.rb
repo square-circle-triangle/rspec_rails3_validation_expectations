@@ -31,7 +31,7 @@ module ValidationExpectations
       one_or_more_fields.each do |field|
         it "should validate #{method} of #{field.to_s.humanize.downcase} as one of #{options[:in].to_sentence(:words_connector => 'or', :last_word_connector => true)}" do
           validators = model_name.validators
-          validator = validators.detect { |v| v.class.to_s == "ActiveModel::Validations::#{method.to_s.titleize}Validator" && v.name == field }
+          validator = validators.detect { |v| v.class.to_s == "ActiveModel::Validations::#{method.to_s.titleize}Validator" && v.attributes.include?(field) }
           validator.should_not be_nil
           validator.options[:in].sort.should == options[:in].sort unless validator.nil?
         end
